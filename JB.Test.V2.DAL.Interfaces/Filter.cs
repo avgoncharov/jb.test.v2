@@ -1,4 +1,4 @@
-﻿namespace JB.Test.V2.Common.Interfaces
+﻿namespace JB.Test.V2.DAL.Interfaces
 {
 	/// <summary>
 	/// Class of a filter for package searching.

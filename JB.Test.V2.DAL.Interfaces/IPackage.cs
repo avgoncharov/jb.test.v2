@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace JB.Test.V2.Common.Interfaces
+namespace JB.Test.V2.DAL.Interfaces
 {
 	/// <summary>
 	/// Interface of a package.
