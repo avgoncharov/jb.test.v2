@@ -18,7 +18,7 @@ namespace JB.Test.V2.DAL.Implementation
 		/// </summary>
 		/// <param name="path">File's path.</param>
 		/// <param name="token">Cancellation token.</param>
-		/// <returns></returns>
+		/// <returns>Package's metadata.</returns>
 		internal static async Task<PackageMetadata> ExtractAync(string path, CancellationToken token)
 		{
 			if(string.IsNullOrWhiteSpace(path))
