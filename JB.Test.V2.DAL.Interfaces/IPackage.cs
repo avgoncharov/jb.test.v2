@@ -34,6 +34,6 @@ namespace JB.Test.V2.DAL.Interfaces
 		/// <summary>
 		/// Gets stream of the package data.
 		/// </summary>
-		Task<Stream> OpenAsync(CancellationToken token);
+		Stream Open();
 	}
 }
