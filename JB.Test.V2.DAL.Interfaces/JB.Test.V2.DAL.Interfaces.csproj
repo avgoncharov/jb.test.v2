@@ -41,14 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\PackageIsAlreadyExistException.cs" />
     <Compile Include="Filter.cs" />
+    <Compile Include="INugetUserRepository.cs" />
     <Compile Include="IPackage.cs" />
     <Compile Include="IPackagesFactory.cs" />
     <Compile Include="IPackagesRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

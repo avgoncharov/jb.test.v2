@@ -10,9 +10,9 @@ using Xunit;
 namespace JB.Test.V2.DAL.Implementation.Tests
 {
 	/// <summary>
-	/// Test suit for a PackagesFactory.
+	/// Test suite for a PackagesFactory.
 	/// </summary>
-	public class PackagesFactoryTests
+	public sealed class PackagesFactoryTests
 	{
 		private readonly IUnityContainer _container;
 
@@ -35,12 +35,12 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 		public async Task CreateFromFileAsyncOkTest()
 		{
 			var factory = _container.Resolve<IPackagesFactory>();
-			var package = await factory.CreateFromFileAsync("TestData\\test_file", CancellationToken.None);
+			var package = await factory.CreateFromFileAsync("TestData\\Moq.4.8.2.nupkg", CancellationToken.None);
 
 			Assert.NotNull(package);
-			Assert.Equal("xunit", package.Id);
-			Assert.Equal("2.4.1", package.Version);
-			Assert.StartsWith("xUnit.net is a developer testing framework", package.Description);
+			Assert.Equal("Moq", package.Id);
+			Assert.Equal("4.8.2", package.Version);
+			Assert.StartsWith("Moq is the most popular and friendly mocki", package.Description);
 		}
 
 

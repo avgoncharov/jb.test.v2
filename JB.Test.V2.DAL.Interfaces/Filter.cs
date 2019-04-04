@@ -21,5 +21,17 @@
 		/// Gets / sets description template.
 		/// </summary>
 		public string Description { get; set; }
+
+		//
+		public int PageNumber { get; set; }
+		public int RowsPerPage { get; set; }
+
+		public bool IsEmpty()
+		{
+			return 
+				string.IsNullOrWhiteSpace(Id)
+				&& string.IsNullOrWhiteSpace(Version)
+				&& string.IsNullOrWhiteSpace(Description);
+		}
 	}
 }
