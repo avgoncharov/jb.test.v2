@@ -46,8 +46,6 @@ namespace JB.Test.V2.DAL.Implementation.DB.Configurations
 			Property(itr => itr.Metadata).IsRequired();
 
 			HasKey(itr => new {itr.Id, itr.Major, itr.Minor, itr.Patch, itr.VersionSuffix});
-
-
 		}
 	}
 }

@@ -18,7 +18,7 @@ namespace JB.Test.V2.DAL.Implementation
 	public sealed class PackagesRepository : IPackagesRepository
 	{
 		private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
-		private readonly PackagesStore _store = new PackagesStore();
+		private readonly NugetStore _store = new NugetStore();
 		private readonly string _rootPath;
 		private readonly string _inputRoot;
 		private readonly ILogger _logger = Log.Logger.ForContext<PackagesRepository>();

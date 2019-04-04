@@ -54,13 +54,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="DB\Configurations\NugetUsersConfiguration.cs" />
     <Compile Include="DB\Configurations\PackagesConfiguration.cs" />
+    <Compile Include="DB\DTOs\NugetUserDto.cs" />
     <Compile Include="DB\DTOs\PackageDto.cs" />
-    <Compile Include="DB\PackagesStore.cs" />
+    <Compile Include="DB\NugetStore.cs" />
     <Compile Include="Extensions\PackageExtensions.cs" />
-    <Compile Include="Migrations\201904041122556_Start.cs" />
-    <Compile Include="Migrations\201904041122556_Start.Designer.cs">
-      <DependentUpon>201904041122556_Start.cs</DependentUpon>
+    <Compile Include="Migrations\201904042021337_Initial.cs" />
+    <Compile Include="Migrations\201904042021337_Initial.Designer.cs">
+      <DependentUpon>201904042021337_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Package.cs" />
@@ -83,8 +85,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201904041122556_Start.resx">
-      <DependentUpon>201904041122556_Start.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201904042021337_Initial.resx">
+      <DependentUpon>201904042021337_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

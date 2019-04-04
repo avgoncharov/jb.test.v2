@@ -30,7 +30,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			_container = new UnityContainer();
 			_container.RegisterType<IPackagesFactory, PackagesFactory>();
 			_container.RegisterType<IPackagesRepository, PackagesRepository>(new InjectionConstructor(OutPath, InputPath));
-			_container.RegisterType<PackagesStore>();
+			_container.RegisterType<NugetStore>();
 
 			AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DB"));
 		}
@@ -55,7 +55,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			Assert.Equal(package.Description, newPackage.Description);
 			Assert.Equal(package.Metadata, newPackage.Metadata);
 
-			var store = _container.Resolve<PackagesStore>();
+			var store = _container.Resolve<NugetStore>();
 
 			var version = SemVersionParser.Parse(package.Version);
 
@@ -94,7 +94,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			var exception = await Assert.ThrowsAsync<InvalidOperationException>(async()=> await repo.AddPackageAsync(packageMock.Object, CancellationToken.None));
 			Assert.Equal(msg, exception.Message);
 
-			var store = _container.Resolve<PackagesStore>();
+			var store = _container.Resolve<NugetStore>();
 			var failedPackageDto = await store
 				.Packages
 				.FirstOrDefaultAsync(itr => itr.Id == package.Id && itr.Version == package.Version);
@@ -133,7 +133,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			await repo.AddPackageAsync(package482, CancellationToken.None);
 			await repo.AddPackageAsync(package483, CancellationToken.None);
 
-			var store = _container.Resolve<PackagesStore>();
+			var store = _container.Resolve<NugetStore>();
 
 			var storePackages = await store.Packages.Where(p => p.Id == package482.Id).ToArrayAsync();
 			Assert.Equal(2, storePackages.Length);
@@ -169,7 +169,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			var path = Path.Combine(OutPath, package.BuildFileName());
 			Assert.True(File.Exists(path));
 
-			var store = _container.Resolve<PackagesStore>();
+			var store = _container.Resolve<NugetStore>();
 
 			//Check that it in system (as item in db)
 			var packageDto = await store
@@ -211,7 +211,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 
 		public void Dispose()
 		{	
-			var store = new PackagesStore();
+			var store = new NugetStore();
 			store.Database.ExecuteSqlCommand("truncate table dbo.Packages");
 
 			if(Directory.Exists(OutPath))
