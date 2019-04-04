@@ -119,7 +119,10 @@
     <None Include="TestData\bad_data_test_file">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\test_file">
+    <None Include="TestData\Moq.4.8.2.nupkg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Moq.4.8.3.nupkg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

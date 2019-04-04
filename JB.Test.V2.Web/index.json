@@ -1,0 +1,33 @@
+{
+	"version": "3.0.1",
+	"resources": [
+
+		{
+			"@id": "http://localhost:65370/v3-flatcontainer/",
+			"@type": "PackageBaseAddress/3.0.0",
+			"comment": "Base URL of where NuGet packages are stored, in the format http://localhost:65370/v3-flatcontainer/{id-lower}/{version-lower}/{id-lower}.{version-lower}.nupkg"
+		},
+
+		{
+			"@id": "http://localhost:65370/api/v2/package",
+			"@type": "PackagePublish/2.0.0"
+		},
+
+		{
+			"@id": "http://localhost:65370/v3/registration3/",
+			"@type": "RegistrationsBaseUrl",
+			"comment": "Base URL of Azure storage where NuGet package registration info is stored"
+		},
+
+		
+		{
+			"@id": "http://localhost:65370/query",
+			"@type": "SearchQueryService",
+			"comment": "Query endpoint of NuGet Search service (primary)"
+		}
+	],
+	"@context": {
+		"@vocab": "http://schema.nuget.org/services#",
+		"comment": "http://www.w3.org/2000/01/rdf-schema#comment"
+	}
+}
