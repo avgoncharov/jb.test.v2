@@ -45,5 +45,13 @@ namespace JB.Test.V2.DAL.Interfaces
 		/// <param name="token">Cancellation token.</param>
 		/// <returns>All packages which are satisfy filter.</returns>
 		Task<IEnumerable<IPackage>> FindAllByFilter(Filter filter, CancellationToken token);
+
+
+		/// <summary>
+		/// Synchronizes repository with file system.
+		/// </summary>
+		/// <param name="token">Cancellation token.</param>
+		/// <returns></returns>
+		Task SyncRepositoryAsync(CancellationToken token);
 	}
 }
