@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\PackageIsAlreadyExistException.cs" />
+    <Compile Include="Exceptions\UserIsAlreadyExistException.cs" />
+    <Compile Include="Exceptions\UserNotFoundException.cs" />
     <Compile Include="Filter.cs" />
     <Compile Include="INugetUserRepository.cs" />
     <Compile Include="IPackage.cs" />

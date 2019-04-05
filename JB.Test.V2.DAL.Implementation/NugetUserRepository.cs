@@ -1,6 +1,8 @@
 ﻿using JB.Test.V2.DAL.Implementation.DB;
 using JB.Test.V2.DAL.Implementation.DB.DTOs;
 using JB.Test.V2.DAL.Interfaces;
+using JB.Test.V2.DAL.Interfaces.Exceptions;
+using Serilog;
 using System;
 using System.Data.Entity;
 using System.Threading;
@@ -10,6 +12,8 @@ namespace JB.Test.V2.DAL.Implementation
 {
 	public sealed class NugetUserRepository : INugetUserRepository
 	{
+		private readonly ILogger _logger = Log.Logger.ForContext<NugetUserRepository>();
+		private readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1);
 		private readonly NugetStore _store;
 
 
@@ -19,30 +23,59 @@ namespace JB.Test.V2.DAL.Implementation
 		}
 
 
-		public Task CreateUserAsync(string apiKey, string userName, CancellationToken token)
+		public async Task CreateUserAsync(string apiKey, string userName, CancellationToken token)
 		{
-			if(string.IsNullOrWhiteSpace(apiKey))
-				throw new ArgumentException(nameof(apiKey));
+			await _semaphoreSlim.WaitAsync(token);
+			try
+			{				
+				if (string.IsNullOrWhiteSpace(apiKey))
+					throw new ArgumentException(nameof(apiKey));
 
-			if(string.IsNullOrWhiteSpace(userName))
-				throw new ArgumentException(nameof(userName));
+				if (string.IsNullOrWhiteSpace(userName))
+					throw new ArgumentException(nameof(userName));
 
-			_store.Users.Add(new NugetUserDto { ApiKey = apiKey, Name = userName });
-			return _store.SaveChangesAsync(token);
+				if (await _store.Users.AnyAsync(itr => itr.ApiKey == apiKey, token))
+				{
+					throw new UserIsAlreadyExistException($"User with api key '{apiKey}' is already exist in system.");
+				}
+
+				_store.Users.Add(new NugetUserDto { ApiKey = apiKey, Name = userName });
+				await _store.SaveChangesAsync(token);
+			}
+			catch (Exception ex) {
+				_logger.Warning($"Can't create new user, reason: {ex}");
+				throw;
+			}
+			finally
+			{
+				_semaphoreSlim.Release();
+			}				 
 		}
 
 
 		public async Task DeleteUserAsync(string apiKey, CancellationToken token)
 		{
-			if(string.IsNullOrWhiteSpace(apiKey))
-				throw new ArgumentException(nameof(apiKey));
+			await _semaphoreSlim.WaitAsync(token);
+			try
+			{
+				if (string.IsNullOrWhiteSpace(apiKey))
+					throw new ArgumentException(nameof(apiKey));
 
-			var user = await _store.Users.FirstOrDefaultAsync(itr => itr.ApiKey == apiKey);
-			if(user == null)
-				return;
+				var user = await _store.Users.FirstOrDefaultAsync(itr => itr.ApiKey == apiKey, token);
+				if (user == null)
+					return;
 
-			_store.Users.Remove(user);
-			await _store.SaveChangesAsync(token);
+				_store.Users.Remove(user);
+				await _store.SaveChangesAsync(token);
+			}
+			catch (Exception ex)
+			{
+				_logger.Warning($"Can't delete user with api key '{apiKey}', reason: {ex}");
+				throw;
+			}
+			finally {
+				_semaphoreSlim.Release();
+			}
 		}
 
 
@@ -51,26 +84,41 @@ namespace JB.Test.V2.DAL.Implementation
 			if(string.IsNullOrWhiteSpace(apiKey))
 				throw new ArgumentException(nameof(apiKey));
 
-			var user = await _store.Users.FirstOrDefaultAsync(itr => itr.ApiKey == apiKey);
+			var user = await _store.Users.FirstOrDefaultAsync(itr => itr.ApiKey == apiKey, token);
 			return user?.Name;
 		}
 
 
 		public async Task UpdateUserAsync(string apiKey, string userName, CancellationToken token)
 		{
-			if(string.IsNullOrWhiteSpace(apiKey))
-				throw new ArgumentException(nameof(apiKey));
+			await _semaphoreSlim.WaitAsync(token);
+			try
+			{
+				if (string.IsNullOrWhiteSpace(apiKey))
+					throw new ArgumentException(nameof(apiKey));
 
-			if(string.IsNullOrWhiteSpace(userName))
-				throw new ArgumentException(nameof(userName));
+				if (string.IsNullOrWhiteSpace(userName))
+					throw new ArgumentException(nameof(userName));
 
-			var user = await _store.Users.FirstOrDefaultAsync(itr => itr.ApiKey == apiKey);
+				if ((await _store.Users.AnyAsync(itr => itr.ApiKey == apiKey, token)) != true)
+				{
+					throw new UserNotFoundException($"User with api key '{apiKey}' not found.");
+				}
 
-			if(user == null)
-				return;
-
-			user.Name = userName;
-			await _store.SaveChangesAsync(token);
+				var user = await _store.Users.FirstAsync(itr => itr.ApiKey == apiKey, token);
+				
+				user.Name = userName;
+				await _store.SaveChangesAsync(token);
+			}
+			catch (Exception ex)
+			{
+				_logger.Warning($"Can't udate user with api key '{apiKey}', reason: {ex}");
+				throw;
+			}
+			finally
+			{
+				_semaphoreSlim.Release();
+			}
 		}
 	}
 }												       

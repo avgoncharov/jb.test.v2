@@ -14,35 +14,20 @@ using JB.Test.V2.DAL.Implementation.Extensions;
 
 namespace JB.Test.V2.DAL.Implementation.Tests
 {
-	public sealed class PackagesRepositoryTests : IDisposable
-	{
-		private readonly IUnityContainer _container;
+	public sealed class PackagesRepositoryTests : RepositoryTestsBase
+	{		  		
 		private const string OutPath = "TestData\\out";
 		private const string InputPath = "TestData\\input";
 		private const string TestInputPath = "TestData";
-
-
-		/// <summary>
-		/// Creates a new instance of the test suite.
-		/// </summary>
-		public PackagesRepositoryTests()
-		{
-			_container = new UnityContainer();
-			_container.RegisterType<IPackagesFactory, PackagesFactory>();
-			_container.RegisterType<IPackagesRepository, PackagesRepository>(new InjectionConstructor(OutPath, InputPath));
-			_container.RegisterType<NugetStore>();
-
-			AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DB"));
-		}
-
+			       
 
 		[Fact]
 		public async Task AddPackageTest()
 		{
-			var factory = _container.Resolve<IPackagesFactory>();
+			var factory = Container.Resolve<IPackagesFactory>();
 			var package = await factory.CreateFromFileAsync(Path.Combine(TestInputPath, "Moq.4.8.2.nupkg"), CancellationToken.None);
 
-			var repo = _container.Resolve<IPackagesRepository>();
+			var repo = Container.Resolve<IPackagesRepository>();
 			await repo.AddPackageAsync(package, CancellationToken.None);
 
 			var path = Path.Combine(OutPath, $"{package.Id}.{package.Version}{Constants.NugetPackageExtension}");
@@ -55,7 +40,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			Assert.Equal(package.Description, newPackage.Description);
 			Assert.Equal(package.Metadata, newPackage.Metadata);
 
-			var store = _container.Resolve<NugetStore>();
+			var store = Container.Resolve<NugetStore>();
 
 			var version = SemVersionParser.Parse(package.Version);
 
@@ -76,11 +61,11 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 		[Fact]
 		public async Task FileSaveFailedTest()
 		{
-			var factory = _container.Resolve<IPackagesFactory>();
+			var factory = Container.Resolve<IPackagesFactory>();
 			var package = await factory.CreateFromFileAsync(Path.Combine(TestInputPath, "Moq.4.8.2.nupkg"),
 				CancellationToken.None);
 
-			var repo = _container.Resolve<IPackagesRepository>();
+			var repo = Container.Resolve<IPackagesRepository>();
 
 			var packageMock = new Moq.Mock<IPackage>();
 			packageMock.SetupGet(m => m.Id).Returns(() => package.Id);
@@ -94,7 +79,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			var exception = await Assert.ThrowsAsync<InvalidOperationException>(async()=> await repo.AddPackageAsync(packageMock.Object, CancellationToken.None));
 			Assert.Equal(msg, exception.Message);
 
-			var store = _container.Resolve<NugetStore>();
+			var store = Container.Resolve<NugetStore>();
 			var failedPackageDto = await store
 				.Packages
 				.FirstOrDefaultAsync(itr => itr.Id == package.Id && itr.Version == package.Version);
@@ -107,11 +92,11 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 		[Fact]
 		public async Task AddPackageTwiceTest()
 		{
-			var factory = _container.Resolve<IPackagesFactory>();
+			var factory = Container.Resolve<IPackagesFactory>();
 			var package = await factory.CreateFromFileAsync(Path.Combine(TestInputPath, "Moq.4.8.2.nupkg"),
 				CancellationToken.None);
 
-			var repo = _container.Resolve<IPackagesRepository>();
+			var repo = Container.Resolve<IPackagesRepository>();
 			await repo.AddPackageAsync(package, CancellationToken.None);
 
 			await Assert.ThrowsAsync<PackageIsAlreadyExistException>(async () => await repo.AddPackageAsync(package, CancellationToken.None));
@@ -120,7 +105,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 		[Fact]
 		public async Task AddPackageWithDifferentVersionsTest()
 		{
-			var factory = _container.Resolve<IPackagesFactory>();
+			var factory = Container.Resolve<IPackagesFactory>();
 			var package482 = await factory.CreateFromFileAsync(
 				Path.Combine(TestInputPath, "Moq.4.8.2.nupkg"),
 				CancellationToken.None);
@@ -129,11 +114,11 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 				Path.Combine(TestInputPath, "Moq.4.8.3.nupkg"),
 				CancellationToken.None);
 
-			var repo = _container.Resolve<IPackagesRepository>();
+			var repo = Container.Resolve<IPackagesRepository>();
 			await repo.AddPackageAsync(package482, CancellationToken.None);
 			await repo.AddPackageAsync(package483, CancellationToken.None);
 
-			var store = _container.Resolve<NugetStore>();
+			var store = Container.Resolve<NugetStore>();
 
 			var storePackages = await store.Packages.Where(p => p.Id == package482.Id).ToArrayAsync();
 			Assert.Equal(2, storePackages.Length);
@@ -151,7 +136,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 		[Fact]
 		public async Task SyncRepositoryTest()
 		{
-			var factory = _container.Resolve<IPackagesFactory>();
+			var factory = Container.Resolve<IPackagesFactory>();
 			var package = await factory.CreateFromFileAsync(
 				Path.Combine(TestInputPath, "Moq.4.8.2.nupkg"),
 				CancellationToken.None);
@@ -160,7 +145,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 				Path.Combine(InputPath, "AutoFixture.4.8.0.nupkg"),
 				CancellationToken.None);
 
-			var repo = _container.Resolve<IPackagesRepository>();
+			var repo = Container.Resolve<IPackagesRepository>();
 
 			//Add package to system.
 			await repo.AddPackageAsync(package, CancellationToken.None);
@@ -169,7 +154,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			var path = Path.Combine(OutPath, package.BuildFileName());
 			Assert.True(File.Exists(path));
 
-			var store = _container.Resolve<NugetStore>();
+			var store = Container.Resolve<NugetStore>();
 
 			//Check that it in system (as item in db)
 			var packageDto = await store
@@ -209,7 +194,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 		}
 
 
-		public void Dispose()
+		protected override void Dispose(bool disposing)
 		{	
 			var store = new NugetStore();
 			store.Database.ExecuteSqlCommand("truncate table dbo.Packages");
@@ -217,7 +202,15 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			if(Directory.Exists(OutPath))
 				Directory.Delete(OutPath, true);
 
-			_container?.Dispose();
+			base.Dispose(disposing);
+		}
+
+
+		protected override void ConfigureContainer()
+		{
+			base.ConfigureContainer();
+			Container.RegisterType<IPackagesFactory, PackagesFactory>();
+			Container.RegisterType<IPackagesRepository, PackagesRepository>(new InjectionConstructor(OutPath, InputPath));
 		}
 	}
 }

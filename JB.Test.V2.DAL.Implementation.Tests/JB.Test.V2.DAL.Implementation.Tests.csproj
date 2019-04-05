@@ -107,10 +107,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NugetUserRepositoryTests.cs" />
     <Compile Include="PackagesFactoryTests.cs" />
     <Compile Include="PackagesRepositoryTests.cs" />
     <Compile Include="PackagesStoreTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryTestsBase.cs" />
     <Compile Include="SemVersionParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
