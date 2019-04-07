@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using JB.Test.V2.Web.App_Start;
+using System;
+using System.IO;
 using System.Web.Http;
-using System.Web.Routing;
 
 namespace JB.Test.V2.Web
 {
-    public class WebApiApplication : System.Web.HttpApplication
-    {
-        protected void Application_Start()
-        {
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-        }
-    }
+	public class WebApiApplication : System.Web.HttpApplication
+	{
+		protected void Application_Start()
+		{
+			AppDomain.CurrentDomain.SetData(
+				"DataDirectory", 
+				Path.Combine(System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data"), "DB"));			
+
+			LogConfig.Configure();
+			GlobalConfiguration.Configure(WebApiConfig.Register);
+		}
+	}
 }

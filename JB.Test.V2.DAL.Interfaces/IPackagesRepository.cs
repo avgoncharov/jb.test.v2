@@ -44,7 +44,7 @@ namespace JB.Test.V2.DAL.Interfaces
 		/// <param name="filter">Filter.</param>
 		/// <param name="token">Cancellation token.</param>
 		/// <returns>All packages which are satisfy filter.</returns>
-		Task<IEnumerable<IPackage>> FindAllByFilter(Filter filter, CancellationToken token);
+		Task<IEnumerable<IPackage>> FindAllByFilterAsync(Filter filter, CancellationToken token);
 
 
 		/// <summary>

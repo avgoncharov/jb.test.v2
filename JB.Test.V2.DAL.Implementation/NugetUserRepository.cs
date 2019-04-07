@@ -27,14 +27,18 @@ namespace JB.Test.V2.DAL.Implementation
 		{
 			await _semaphoreSlim.WaitAsync(token);
 			try
-			{				
-				if (string.IsNullOrWhiteSpace(apiKey))
+			{
+				if(string.IsNullOrWhiteSpace(apiKey))
+				{
 					throw new ArgumentException(nameof(apiKey));
+				}
 
-				if (string.IsNullOrWhiteSpace(userName))
+				if(string.IsNullOrWhiteSpace(userName))
+				{
 					throw new ArgumentException(nameof(userName));
+				}
 
-				if (await _store.Users.AnyAsync(itr => itr.ApiKey == apiKey, token))
+				if(await _store.Users.AnyAsync(itr => itr.ApiKey == apiKey, token))
 				{
 					throw new UserIsAlreadyExistException($"User with api key '{apiKey}' is already exist in system.");
 				}
@@ -42,14 +46,15 @@ namespace JB.Test.V2.DAL.Implementation
 				_store.Users.Add(new NugetUserDto { ApiKey = apiKey, Name = userName });
 				await _store.SaveChangesAsync(token);
 			}
-			catch (Exception ex) {
+			catch(Exception ex)
+			{
 				_logger.Warning($"Can't create new user, reason: {ex}");
 				throw;
 			}
 			finally
 			{
 				_semaphoreSlim.Release();
-			}				 
+			}
 		}
 
 
@@ -58,22 +63,27 @@ namespace JB.Test.V2.DAL.Implementation
 			await _semaphoreSlim.WaitAsync(token);
 			try
 			{
-				if (string.IsNullOrWhiteSpace(apiKey))
+				if(string.IsNullOrWhiteSpace(apiKey))
+				{
 					throw new ArgumentException(nameof(apiKey));
+				}
 
 				var user = await _store.Users.FirstOrDefaultAsync(itr => itr.ApiKey == apiKey, token);
-				if (user == null)
+				if(user == null)
+				{
 					return;
+				}
 
 				_store.Users.Remove(user);
 				await _store.SaveChangesAsync(token);
 			}
-			catch (Exception ex)
+			catch(Exception ex)
 			{
 				_logger.Warning($"Can't delete user with api key '{apiKey}', reason: {ex}");
 				throw;
 			}
-			finally {
+			finally
+			{
 				_semaphoreSlim.Release();
 			}
 		}
@@ -82,7 +92,9 @@ namespace JB.Test.V2.DAL.Implementation
 		public async Task<string> FindUserByApiKeyAsync(string apiKey, CancellationToken token)
 		{
 			if(string.IsNullOrWhiteSpace(apiKey))
+			{
 				throw new ArgumentException(nameof(apiKey));
+			}
 
 			var user = await _store.Users.FirstOrDefaultAsync(itr => itr.ApiKey == apiKey, token);
 			return user?.Name;
@@ -94,23 +106,27 @@ namespace JB.Test.V2.DAL.Implementation
 			await _semaphoreSlim.WaitAsync(token);
 			try
 			{
-				if (string.IsNullOrWhiteSpace(apiKey))
+				if(string.IsNullOrWhiteSpace(apiKey))
+				{
 					throw new ArgumentException(nameof(apiKey));
+				}
 
-				if (string.IsNullOrWhiteSpace(userName))
+				if(string.IsNullOrWhiteSpace(userName))
+				{
 					throw new ArgumentException(nameof(userName));
+				}
 
-				if ((await _store.Users.AnyAsync(itr => itr.ApiKey == apiKey, token)) != true)
+				if((await _store.Users.AnyAsync(itr => itr.ApiKey == apiKey, token)) != true)
 				{
 					throw new UserNotFoundException($"User with api key '{apiKey}' not found.");
 				}
 
 				var user = await _store.Users.FirstAsync(itr => itr.ApiKey == apiKey, token);
-				
+
 				user.Name = userName;
 				await _store.SaveChangesAsync(token);
 			}
-			catch (Exception ex)
+			catch(Exception ex)
 			{
 				_logger.Warning($"Can't udate user with api key '{apiKey}', reason: {ex}");
 				throw;
@@ -121,4 +137,4 @@ namespace JB.Test.V2.DAL.Implementation
 			}
 		}
 	}
-}												       
+}

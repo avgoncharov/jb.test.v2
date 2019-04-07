@@ -34,6 +34,11 @@ namespace JB.Test.V2.DAL.Implementation
 		/// <inheritdoc/>
 		public async Task AddPackageAsync(IPackage package, CancellationToken token)
 		{
+			if(package == null)
+			{
+				throw new ArgumentNullException(nameof(package));
+			}
+
 			await _semaphore.WaitAsync(token);
 			try
 			{
@@ -53,7 +58,7 @@ namespace JB.Test.V2.DAL.Implementation
 
 				using(var transaction = _store.Database.BeginTransaction())
 				{
-					var latestPackage = await FindLatest(package.Id, version, token);
+					var latestPackage = await FindLatestAsync(package.Id, version, token);
 
 					var newPackage = new PackageDto
 					{
@@ -64,15 +69,16 @@ namespace JB.Test.V2.DAL.Implementation
 						Minor = version.Minor,
 						Patch = version.Patch,
 						VersionSuffix = version.VersionSuffix,
-
-						Latest = IsLatest(latestPackage, version),
-
 						Description = package.Description,
 						Metadata = package.Metadata
 					};
 
+					newPackage.Latest = newPackage.CompareToByVersion(latestPackage) > 0;
+
 					if(latestPackage != null && newPackage.Latest)
+					{
 						latestPackage.Latest = false;
+					}
 
 					_store.Packages.Add(newPackage);
 
@@ -94,16 +100,17 @@ namespace JB.Test.V2.DAL.Implementation
 
 
 		/// <inheritdoc/>
-		public async Task<IEnumerable<IPackage>> FindAllByFilter(Filter filter, CancellationToken token)
+		public async Task<IEnumerable<IPackage>> FindAllByFilterAsync(Filter filter, CancellationToken token)
 		{
 			var query = _store.Packages.AsQueryable();
 
 			if(filter == null || filter.IsEmpty())
 			{
-				return await query
+				return (await query
 					.Where(itr => itr.Latest && itr.VersionSuffix == "")
-					.Select(itr => itr.MapToPackage(_rootPath))
-					.ToListAsync(token);
+					.ToListAsync(token))
+					.Select(itr => itr.MapToPackage(_rootPath));
+					
 			}
 
 			if(string.IsNullOrWhiteSpace(filter.Id) != true)
@@ -121,38 +128,42 @@ namespace JB.Test.V2.DAL.Implementation
 				query = query.Where(itr => itr.Description.Contains(filter.Description));
 			}
 
-			return await query.Select(itr => itr.MapToPackage(_rootPath)).ToListAsync(token);
+			return (await query.ToListAsync(token)).Select(itr => itr.MapToPackage(_rootPath));
 		}
 
 
 		/// <inheritdoc/>
 		public async Task<IEnumerable<IPackage>> FindByIdAsync(string id, CancellationToken token)
 		{
-			return await _store.Packages.Where(itr =>
-				itr.Latest && itr.Id == id && itr.VersionSuffix == "")
-				.Select(itr => itr.MapToPackage(_rootPath))
-				.ToListAsync(token);
+			if(string.IsNullOrWhiteSpace(id))
+			{
+				throw new ArgumentException("Id can't be null or empty.");
+			}
+
+			return (await _store.Packages.Where(itr =>
+				itr.Latest && itr.Id == id && itr.VersionSuffix == "").ToListAsync(token))
+				.Select(itr => itr.MapToPackage(_rootPath));
 		}
 
 
 		/// <inheritdoc/>
 		public async Task<Stream> GetStreamForAsync(string id, string version, CancellationToken token)
 		{
-			var buf = await _store.Packages.Where(itr =>
-					itr.Id == id && itr.Version == version)
-				.Select(itr =>
-					new Package(
-						Path.Combine(_rootPath, itr.BuildFileName()),
-						new PackageMetadata
-						{
-							Id = itr.Id,
-							Version = itr.Version,
-							Description = itr.Description,
-							Metadata = itr.Metadata
-						}))
-				.FirstOrDefaultAsync(token);
+			if(string.IsNullOrWhiteSpace(id))
+			{
+				throw new ArgumentException("Id can't be null or empty.");
+			}
 
-			return buf?.Open();
+			if(string.IsNullOrWhiteSpace(version))
+			{
+				throw new ArgumentException("Version can't be null or empty.");
+			}
+
+			var buf = await _store.Packages.Where(itr =>
+					itr.Id == id && itr.Version == version).FirstOrDefaultAsync(token);
+				
+
+			return buf?.MapToPackage(_rootPath).Open();
 		}
 
 
@@ -176,8 +187,21 @@ namespace JB.Test.V2.DAL.Implementation
 
 			if(toDelete.Any())
 			{
-				_store.Packages.RemoveRange(toDelete);
-				await _store.SaveChangesAsync(token);
+				await _semaphore.WaitAsync(token);
+				try
+				{
+					_store.Packages.RemoveRange(toDelete);
+					await _store.SaveChangesAsync(token);
+				}
+				catch(Exception ex)
+				{
+					_logger.Error($"Synchronization with file system failed. Reason: {ex}");
+					throw;
+				}
+				finally
+				{
+					_semaphore.Release();
+				}
 			}
 		}
 
@@ -204,33 +228,9 @@ namespace JB.Test.V2.DAL.Implementation
 				}
 			}
 		}
-		
-
-		private static bool IsLatest(PackageDto latestPackage, SemVersion version)
-		{
-			if(latestPackage == null)
-				return true;
-
-			if(version.Major < latestPackage.Major)
-				return false;
-			if(version.Major > latestPackage.Major)
-				return true;
-
-			if(version.Minor < latestPackage.Minor)
-				return false;
-			if(version.Minor > latestPackage.Minor)
-				return true;
-
-			if(version.Patch < latestPackage.Patch)
-				return false;
-			if(version.Patch > latestPackage.Patch)
-				return true;
-
-			return false;
-		}
 
 
-		private async Task<PackageDto> FindLatest(string id, SemVersion version, CancellationToken token)
+		private async Task<PackageDto> FindLatestAsync(string id, SemVersion version, CancellationToken token)
 		{
 			var release = string.IsNullOrWhiteSpace(version.VersionSuffix);
 			var query = _store.Packages.Where(itr => itr.Id == id && itr.Latest);
@@ -241,6 +241,7 @@ namespace JB.Test.V2.DAL.Implementation
 			return await query.FirstOrDefaultAsync(token);
 		}
 
+
 		private async Task SaveToFileSystemAsync(IPackage package, CancellationToken token)
 		{
 			if(Directory.Exists(_rootPath) != true)
@@ -248,7 +249,7 @@ namespace JB.Test.V2.DAL.Implementation
 				Directory.CreateDirectory(_rootPath);
 			}
 
-			var path = Path.Combine(_rootPath, $"{ package.Id}.{package.Version}{Constants.NugetPackageExtension}");
+			var path = Path.Combine(_rootPath, package.BuildFileName());
 			const int bufLenght = 1024;
 			byte[] buf = new byte[bufLenght];
 			int currLen = 0;

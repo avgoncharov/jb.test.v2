@@ -8,58 +8,60 @@ using Newtonsoft.Json;
 
 namespace JB.Test.V2.Web.Controllers
 {
+	class CatalogEntry
+	{
+		[JsonProperty(PropertyName = "@id")]
+		public string DId { get; set; }
+		[JsonProperty(PropertyName = "id")]
+		public string Id { get; set; }
+
+		[JsonProperty(PropertyName = "version")]
+		public string Version { get; set; }
+	}
+
+	class InnerItems
+	{
+		[JsonProperty(PropertyName = "@id")]
+		public string DId { get; set; }
+
+		[JsonProperty(PropertyName = "catalogEntry")]
+		public CatalogEntry CatalogEntry { get; set; }
+
+
+		[JsonProperty(PropertyName = "packageContent")]
+		public string PackageContent { get; set; }
+
+		[JsonProperty(PropertyName = "registration")]
+		public string Registration { get; set; }
+
+
+
+	}
+
+	class Item
+	{
+		[JsonProperty(PropertyName = "@id")]
+		public string DId { get; set; }
+
+
+		[JsonProperty(PropertyName = "count")]
+		public int Count { get; set; }
+
+		[JsonProperty(PropertyName = "items")]
+		public InnerItems[] Items { get; set; }
+
+		[JsonProperty(PropertyName = "lower")]
+		public string Lower { get; set; }
+
+		[JsonProperty(PropertyName = "upper")]
+		public string Upper { get; set; }
+
+	}
+
 	[RoutePrefix("v3/registration3-gz")]
 	public class RegistrationGzController : ApiController
 	{
-		class CatalogEntry
-		{
-			[JsonProperty(PropertyName = "@id")]
-			public string DId { get; set; }
-			[JsonProperty(PropertyName = "id")]
-			public string Id { get; set; }
-
-			[JsonProperty(PropertyName = "version")]
-			public string Version { get; set; }
-		}
-
-		class InnerItems
-		{
-			[JsonProperty(PropertyName = "@id")]
-			public string DId { get; set; }
-
-			[JsonProperty(PropertyName = "catalogEntry")]
-			public CatalogEntry CatalogEntry { get; set; }
-
-
-			[JsonProperty(PropertyName = "packageContent")]
-			public string PackageContent { get; set; }
-
-			[JsonProperty(PropertyName = "registration")]
-			public string Registration { get; set; }
-
-
-
-		}
-
-		class Item
-		{
-			[JsonProperty(PropertyName = "@id")]
-			public string DId { get; set; }
-
-
-			[JsonProperty(PropertyName = "count")]
-			public int Count { get; set; }
-
-			[JsonProperty(PropertyName = "items")]
-			public InnerItems[] Items { get; set; }
-
-			[JsonProperty(PropertyName = "lower")]
-			public string Lower { get; set; }
-
-			[JsonProperty(PropertyName = "upper")]
-			public string Upper { get; set; }
-
-		}
+		
 		[Route("{id}/index.json"), HttpGet]
 		public IHttpActionResult Get(string id)
 		{

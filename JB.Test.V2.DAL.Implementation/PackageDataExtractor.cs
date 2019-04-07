@@ -48,13 +48,17 @@ namespace JB.Test.V2.DAL.Implementation
 
 			var idElem = xmlDoc.SelectSingleNode("//metadata/id");
 			if(idElem == null || string.IsNullOrWhiteSpace(idElem.InnerText))
+			{
 				throw new InvalidDataException("Id can't be empty.");
+			}
 
 			result.Id = idElem.InnerText;
 
 			var versionElem = xmlDoc.SelectSingleNode("//metadata/version");
 			if(versionElem == null || string.IsNullOrWhiteSpace(versionElem.InnerText))
+			{
 				throw new InvalidDataException("version can't be empty.");
+			}
 
 			result.Version = versionElem.InnerText;
 
