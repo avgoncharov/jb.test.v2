@@ -116,11 +116,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\app.js" />
+    <Content Include="app\components\common-info\common-info.component.js" />
+    <Content Include="app\components\common-info\common-info.template.html" />
+    <Content Include="app\components\package-info\package-info.component.js" />
+    <Content Include="app\components\package-info\package-info.template.html" />
+    <Content Include="app\services\package.service.js" />
     <Content Include="App_Data\DB\PackagesDb.mdf" />
     <Content Include="App_Data\DB\PackagesDb_log.ldf">
       <DependentUpon>PackagesDb.mdf</DependentUpon>
     </Content>
+    <Content Include="Default.html" />
     <Content Include="Global.asax" />
+    <Content Include="gulpfile.js" />
     <Content Include="test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -148,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.json" />
+    <Content Include="package.json" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -157,7 +166,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="app\" />
     <Folder Include="Models\" />
     <Folder Include="Pkgs\Input\" />
     <Folder Include="Pkgs\Output\" />

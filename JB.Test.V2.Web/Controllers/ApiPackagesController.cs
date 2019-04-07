@@ -37,5 +37,18 @@ namespace JB.Test.V2.Web.Controllers
 
 			return Ok(result);
 		}
+
+
+		[Route("{id}/{version}"), HttpGet]
+		public async Task<IHttpActionResult> GetVersion(string id, string version, CancellationToken token)
+		{
+			var result = await _packagesRepository.FindAllByFilterAsync(new Filter { Id = id, Version = version }, token);
+			if(result == null || result.Any() != true)
+			{
+				return NotFound();
+			}
+
+			return Ok(result.First());
+		} 
 	}
 }

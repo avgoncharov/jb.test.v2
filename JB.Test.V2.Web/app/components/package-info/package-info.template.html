@@ -1,0 +1,14 @@
+﻿<div class="modal-header">
+	<b>Package metadata view</b>
+	<span class="btn btn-default close" ng-click="$ctrl.close()">&times;</span>
+</div>
+
+<div class="modal-body"> 
+	<div><i>Id:</i> <b>{{$ctrl.data.Id}}</b></div>
+	<div><i>Version:</i><b>{{$ctrl.data.Version}}</b></div>	
+	<div><i>Metadata:</i> <textarea disabled="disabled" rows="20" class="form-control">{{$ctrl.data.Metadata}}</textarea></div>
+</div>
+
+<div class="modal-footer dialog-footer">
+	<button class="btn btn-default" ng-click="$ctrl.close()">Close</button>
+</div>
