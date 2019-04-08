@@ -5,3 +5,4 @@ packages/
 /*.user
 logs/
 node_modules/
+JB.Test.V2.Web/Pkgs/Output/
