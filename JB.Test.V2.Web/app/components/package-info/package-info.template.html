@@ -3,9 +3,10 @@
 	<span class="btn btn-default close" ng-click="$ctrl.close()">&times;</span>
 </div>
 
-<div class="modal-body"> 
+<div class="modal-body"> 	
 	<div><i>Id:</i> <b>{{$ctrl.data.Id}}</b></div>
 	<div><i>Version:</i><b>{{$ctrl.data.Version}}</b></div>	
+	<div><a href="api/nuget/{{$ctrl.data.Id}}/{{$ctrl.data.Version}}/package.json">Download</a></div>
 	<div><i>Metadata:</i> <textarea disabled="disabled" rows="20" class="form-control">{{$ctrl.data.Metadata}}</textarea></div>
 </div>
 

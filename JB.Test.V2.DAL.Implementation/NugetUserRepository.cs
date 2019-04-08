@@ -23,6 +23,7 @@ namespace JB.Test.V2.DAL.Implementation
 		}
 
 
+		/// <inheritdoc/>
 		public async Task CreateUserAsync(string apiKey, string userName, CancellationToken token)
 		{
 			await _semaphoreSlim.WaitAsync(token);
@@ -58,6 +59,7 @@ namespace JB.Test.V2.DAL.Implementation
 		}
 
 
+		/// <inheritdoc/>
 		public async Task DeleteUserAsync(string apiKey, CancellationToken token)
 		{
 			await _semaphoreSlim.WaitAsync(token);
@@ -89,7 +91,8 @@ namespace JB.Test.V2.DAL.Implementation
 		}
 
 
-		public async Task<string> FindUserByApiKeyAsync(string apiKey, CancellationToken token)
+		/// <inheritdoc/>
+		public async Task<INugetUser> FindUserByApiKeyAsync(string apiKey, CancellationToken token)
 		{
 			if(string.IsNullOrWhiteSpace(apiKey))
 			{
@@ -97,10 +100,26 @@ namespace JB.Test.V2.DAL.Implementation
 			}
 
 			var user = await _store.Users.FirstOrDefaultAsync(itr => itr.ApiKey == apiKey, token);
-			return user?.Name;
+			
+			return user != null? new NugetUser(user.ApiKey, user.Name) : null;
 		}
 
 
+		/// <inheritdoc/>
+		public async Task<INugetUser> FindUserByNameAsync(string name, CancellationToken token)
+		{
+			if (string.IsNullOrWhiteSpace(name))
+			{
+				throw new ArgumentException(nameof(name));
+			}
+
+			var user = await _store.Users.FirstOrDefaultAsync(itr => itr.Name == name, token);
+
+			return user != null ? new NugetUser(user.ApiKey, user.Name) : null;
+		}
+
+
+		/// <inheritdoc/>
 		public async Task UpdateUserAsync(string apiKey, string userName, CancellationToken token)
 		{
 			await _semaphoreSlim.WaitAsync(token);

@@ -1,10 +1,13 @@
-﻿using JB.Test.V2.DAL.Interfaces;
+﻿using JB.Test.V2.DAL.Implementation.Extensions;
+using JB.Test.V2.DAL.Interfaces;
 using JB.Test.V2.DAL.Interfaces.Exceptions;
 using Serilog;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -32,6 +35,46 @@ namespace JB.Test.V2.Web.Controllers
 		}
 
 
+		[Route("~/api/nuget/{id}/{version}/package.json")]
+		public async Task<IHttpActionResult> GetAsync(string id, string version, CancellationToken token)
+		{
+			try
+			{
+				var result = await _packagesRepository.GetPackageAsync(id, version, token);
+				if (result == null)
+				{
+					return NotFound();
+				}
+
+				var stream = result.Open();
+
+				var resonse = new HttpResponseMessage(HttpStatusCode.OK)
+				{
+					Content = new StreamContent(stream)
+				};
+
+				resonse.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+				{
+					FileName = Path.GetFileName(result.BuildFileName())
+				};
+
+				resonse.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+				resonse.Content.Headers.ContentLength = stream.Length;
+				return ResponseMessage(resonse);
+			}
+			catch (ArgumentException ex)
+			{
+				_logger.Warning($"Get faield. Reason: {ex}");
+				return BadRequest();
+			}
+			catch (Exception ex)
+			{
+				_logger.Error($"Get failed. Unexpected error: {ex}");
+				return InternalServerError();
+			}
+		}
+
+
 		[Route(""), HttpPut]
 		public async Task<IHttpActionResult> Put(CancellationToken token)
 		{
@@ -44,7 +87,7 @@ namespace JB.Test.V2.Web.Controllers
 			try
 			{
 
-				if(string.IsNullOrWhiteSpace(await _nugetUserRepository.FindUserByApiKeyAsync(apiKye, token)))
+				if(await _nugetUserRepository.FindUserByApiKeyAsync(apiKye, token) == null)
 				{
 					_logger.Warning($"User by api key '{apiKye}' wasn't found in system.");
 					return Unauthorized();
@@ -85,33 +128,7 @@ namespace JB.Test.V2.Web.Controllers
 				_logger.Error($"Put failed. Unexpected error: {ex}");
 				return InternalServerError();
 			}
-		}
-
-
-		[Route("~/api/nuget/{id}/{version}/package.json")]
-		public async Task<IHttpActionResult> GetAsync(string id, string version, CancellationToken token)
-		{
-			try
-			{
-				var result = await _packagesRepository.GetStreamForAsync(id, version, token);
-				if(result == null)
-				{
-					return NotFound();
-				}
-
-				return Ok(result);
-			}
-			catch(ArgumentException ex)
-			{
-				_logger.Warning($"Get faield. Reason: {ex}");
-				return BadRequest();
-			}
-			catch(Exception ex)
-			{
-				_logger.Error($"Get failed. Unexpected error: {ex}");
-				return InternalServerError();
-			}
-		}
+		}   
 
 
 		private string GetApiKey()

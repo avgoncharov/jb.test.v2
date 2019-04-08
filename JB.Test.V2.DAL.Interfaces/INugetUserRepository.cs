@@ -14,7 +14,16 @@ namespace JB.Test.V2.DAL.Interfaces
 		/// <param name="apiKey">ApiKey of user.</param>
 		/// <param name="token">Cancellation token.</param>
 		/// <returns>User's name - if found, or null.</returns>
-		Task<string> FindUserByApiKeyAsync(string apiKey, CancellationToken token);
+		Task<INugetUser> FindUserByApiKeyAsync(string apiKey, CancellationToken token);
+
+
+		/// <summary>
+		/// Looking for user by user's name.
+		/// </summary>
+		/// <param name="name">User's name.</param>
+		/// <param name="token">Cancellation token.</param>
+		/// <returns>User's api key- if found, or null.</returns>
+		Task<INugetUser> FindUserByNameAsync(string name, CancellationToken token);
 
 
 		/// <summary>

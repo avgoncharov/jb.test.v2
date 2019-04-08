@@ -4,10 +4,10 @@ using System.IO;
 
 namespace JB.Test.V2.DAL.Implementation.Extensions
 {
-	internal static class PackageExtensions
+	public static class PackageExtensions
 	{
 		internal static string BuildFileName(this PackageDto dto) => BuildFileName(dto.Id, dto.Version);
-		internal static string BuildFileName(this IPackage package) => BuildFileName(package.Id, package.Version);
+		public static string BuildFileName(this IPackage package) => BuildFileName(package.Id, package.Version);
 
 		internal static IPackage MapToPackage(this PackageDto packageDto, string rootPath)
 		{

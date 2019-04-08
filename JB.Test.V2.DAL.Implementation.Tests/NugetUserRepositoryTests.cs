@@ -80,19 +80,39 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 
 
 		[Theory, AutoData]
-		public async Task FindUserTest(string apiKey, string name)
+		public async Task FindUserByApiKeyTest(string apiKey, string name)
 		{
 			var store = Container.Resolve<NugetStore>();
 			Assert.False(await store.Users.AnyAsync());
 
 			var repo = Container.Resolve<INugetUserRepository>();
 			await repo.CreateUserAsync(apiKey, name, CancellationToken.None);	  
-			var findName = await repo.FindUserByApiKeyAsync(apiKey, CancellationToken.None);
+			var user = await repo.FindUserByApiKeyAsync(apiKey, CancellationToken.None);
 
-			Assert.NotNull(findName);
-			Assert.Equal(name, findName);
+			Assert.NotNull(user);
+			Assert.Equal(name, user.Name);
+			Assert.Equal(apiKey, user.ApiKey);
 
 			var notFoundUserName = await repo.FindUserByApiKeyAsync(apiKey+name, CancellationToken.None);
+			Assert.Null(notFoundUserName);
+		}
+
+
+		[Theory, AutoData]
+		public async Task FindUserNameTest(string apiKey, string name)
+		{
+			var store = Container.Resolve<NugetStore>();
+			Assert.False(await store.Users.AnyAsync());
+
+			var repo = Container.Resolve<INugetUserRepository>();
+			await repo.CreateUserAsync(apiKey, name, CancellationToken.None);
+			var user = await repo.FindUserByNameAsync(name, CancellationToken.None);
+
+			Assert.NotNull(user);
+			Assert.Equal(name, user.Name);
+			Assert.Equal(apiKey, user.ApiKey);
+
+			var notFoundUserName = await repo.FindUserByNameAsync(apiKey + name, CancellationToken.None);
 			Assert.Null(notFoundUserName);
 		}
 

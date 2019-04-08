@@ -147,7 +147,7 @@ namespace JB.Test.V2.DAL.Implementation
 
 
 		/// <inheritdoc/>
-		public async Task<Stream> GetStreamForAsync(string id, string version, CancellationToken token)
+		public async Task<IPackage> GetPackageAsync(string id, string version, CancellationToken token)
 		{
 			if(string.IsNullOrWhiteSpace(id))
 			{
@@ -163,7 +163,7 @@ namespace JB.Test.V2.DAL.Implementation
 					itr.Id == id && itr.Version == version).FirstOrDefaultAsync(token);
 				
 
-			return buf?.MapToPackage(_rootPath).Open();
+			return buf?.MapToPackage(_rootPath);
 		}
 
 

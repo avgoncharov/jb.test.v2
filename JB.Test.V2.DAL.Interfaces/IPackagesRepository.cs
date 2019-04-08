@@ -29,13 +29,13 @@ namespace JB.Test.V2.DAL.Interfaces
 
 
 		/// <summary>
-		/// Gets stream of a package's data.
+		/// Gets package by id and version.
 		/// </summary>
 		/// <param name="id">Id of the package.</param>
 		/// <param name="version">Version of the package.</param>
 		/// <param name="token">Cancellation token.</param>
 		/// <returns>Data stream.</returns>
-		Task<Stream> GetStreamForAsync(string id, string version, CancellationToken token);
+		Task<IPackage> GetPackageAsync(string id, string version, CancellationToken token);
 
 
 		/// <summary>

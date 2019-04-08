@@ -25,6 +25,34 @@ namespace JB.Test.V2.Web.Controllers
 		}
 
 
+		[Route("find-by-name/{userName}"), HttpGet]
+		public async Task<IHttpActionResult> GetByNameAsync(string userName, CancellationToken token)
+		{
+			if (string.IsNullOrWhiteSpace(userName))
+			{
+				return BadRequest("User name can't be empty.");
+			}
+
+			var user = await _nugetUserRepository.FindUserByNameAsync(userName, token);
+			       
+			return user != null ? Ok(user) : NotFound() as IHttpActionResult;
+		}
+
+
+		[Route("find-by-api-key/{apiKey}"), HttpGet]
+		public async Task<IHttpActionResult> GetBytApiKeyAsync(string apiKey, CancellationToken token)
+		{
+			if (string.IsNullOrWhiteSpace(apiKey))
+			{
+				return BadRequest("ApiKey can't be empty.");
+			}
+
+			var user = await _nugetUserRepository.FindUserByApiKeyAsync(apiKey, token);
+
+			return user != null ? Ok(user) : NotFound() as IHttpActionResult;
+		}
+
+
 		[Route("generate-new-for/{userName}"), HttpPost]
 		public async Task<IHttpActionResult> PostAsync(string userName, CancellationToken token)
 		{
@@ -35,6 +63,12 @@ namespace JB.Test.V2.Web.Controllers
 
 			try
 			{
+				var user = await _nugetUserRepository.FindUserByNameAsync(userName, token);
+				if (user != null)
+				{
+					return Ok(user.ApiKey);
+				}
+
 				var guid = Guid.NewGuid().ToString();
 				await _nugetUserRepository.CreateUserAsync(guid, userName, token);
 				return Ok(guid);
