@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiKeyGeneratorControllerTests.cs" />
+    <Compile Include="ApiPackagesControllerTests.cs" />
     <Compile Include="NugetUserRepositoryFake.cs" />
     <Compile Include="PackagesRepositoryFake.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

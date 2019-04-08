@@ -12,6 +12,8 @@ namespace JB.Test.V2.Web.Tests
 	public sealed class ApiKeyGeneratorControllerTests
 	{
 		private readonly IUnityContainer _container;
+
+
 		public ApiKeyGeneratorControllerTests()
 		{
 			_container = new UnityContainer();
