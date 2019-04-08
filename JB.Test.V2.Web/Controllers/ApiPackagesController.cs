@@ -28,14 +28,21 @@ namespace JB.Test.V2.Web.Controllers
 		[Route(""), HttpPost]
 		public async Task<IHttpActionResult> GetByFilter([FromBody] Filter filter, CancellationToken token)
 		{
-			var result = await _packagesRepository.FindAllByFilterAsync(filter, token);
-
-			if(result == null || result.Any() != true)
+			try
 			{
-				return NotFound();
-			}
+				var result = await _packagesRepository.FindAllByFilterAsync(filter, token);
 
-			return Ok(result);
+				if (result == null || result.Any() != true)
+				{
+					return NotFound();
+				}
+
+				return Ok(result);
+			}
+			catch (Exception ex) {
+				_logger.Error(ex.ToString());
+				throw;
+			}
 		}
 
 

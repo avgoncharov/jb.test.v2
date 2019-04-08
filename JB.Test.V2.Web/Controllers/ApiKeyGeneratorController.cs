@@ -71,7 +71,9 @@ namespace JB.Test.V2.Web.Controllers
 
 				var guid = Guid.NewGuid().ToString();
 				await _nugetUserRepository.CreateUserAsync(guid, userName, token);
-				return Ok(guid);
+				var newUser = await _nugetUserRepository.FindUserByApiKeyAsync(guid, token);
+
+				return newUser != null ? Ok(newUser) : BadRequest() as IHttpActionResult;
 			}
 			catch (ArgumentException ex){
 				_logger.Warning($"Create new user failed. Resone: {ex.Message}");

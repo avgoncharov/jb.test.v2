@@ -15,9 +15,9 @@
 		function packageInfoController(nugetUserService) {
 			const ctrl = this;
 			ctrl.userName = '';
-			
+
 			ctrl.$onInit = function () {
-				
+
 			};
 
 			ctrl.generate = function () {
@@ -35,27 +35,21 @@
 			ctrl.failedFindUser = function (error) {
 				if (error.status === 404) {
 					nugetUserService.createUser(
-						ctrl.userName, 
-						ctrl.successFindUser, 
+						ctrl.userName,
+						ctrl.successFindUser,
 						ctrl.errorHandler);
 				}
 
 				ctrl.errorHandler(error);
 			};
 
-			ctrl.successVersionsHandler = function (result) {
-				ctrl.data = result;
-			};
-
 			ctrl.errorHandler = function (err) {
 				console.log(err);
 			};
 
-
 			ctrl.close = function () {
 				ctrl.modalInstance.close({ dialogResult: "cancel" });
-			};
-
+			}; 
 		}
 	}
 )(window.angular);
