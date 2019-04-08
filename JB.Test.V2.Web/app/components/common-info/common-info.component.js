@@ -10,6 +10,7 @@
 
 	function commonInfoController(packageService,$uibModal) {
 		const ctrl = this;
+		ctrl.pushAddress = window.location.origin + "/index.json";
 		ctrl.data = [];
 
 		ctrl.Id = "";
@@ -50,6 +51,22 @@
 							return id;
 						},
 						Version: function(){ return version;}
+					},
+					size: "lg"
+				});
+
+			modalInst.result.then(function (rslt) {
+			});
+		};
+
+
+		ctrl.openApiKeyGenerator = function () {
+			var modalInst = $uibModal.open(
+				{
+					animation: true,
+					backdrop: false,
+					component: "apiKeyInfo",
+					resolve: {						
 					},
 					size: "lg"
 				});

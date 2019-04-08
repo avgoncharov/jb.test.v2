@@ -15,6 +15,9 @@ namespace JB.Test.V2.Web
 
 			LogConfig.Configure();
 			GlobalConfiguration.Configure(WebApiConfig.Register);
+
+			//TODO: Sync repo on start.
+			//TODO: from right index.json.
 		}
 	}
 }

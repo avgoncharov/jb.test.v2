@@ -1,0 +1,18 @@
+﻿<div class="modal-header">
+	<b>Api Key Generator</b>
+	<span class="btn btn-default close" ng-click="$ctrl.close()">&times;</span>
+</div>
+
+<div class="modal-body">
+	<div><i>Enter user name:</i> <input type="text" ng-model="$ctrl.userName" class="form-control" /></div>
+	<br />
+	<button ng-click="$ctrl.generate()" class="btn btn-success">Find or generate new api key</button>
+	<br />
+	<br />
+	<div><i>Api key: </i> <b>{{$ctrl.apiKey}}</b></div>
+
+</div>
+
+<div class="modal-footer dialog-footer">
+	<button class="btn btn-default" ng-click="$ctrl.close()">Close</button>
+</div>

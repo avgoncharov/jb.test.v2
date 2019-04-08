@@ -3,34 +3,34 @@
 	"resources": [
 
 		{
-			"@id": "http://localhost:65370/v3-flatcontainer/",
+			"@id": "~/v3-flatcontainer/",
 			"@type": "PackageBaseAddress/3.0.0",
 			"comment": "Base URL of where NuGet packages are stored, in the format http://localhost:65370/v3-flatcontainer/{id-lower}/{version-lower}/{id-lower}.{version-lower}.nupkg"
 		},
 
 		{
-			"@id": "http://localhost:65370/api/v2/package",
+			"@id": "~/api/v2/package",
 			"@type": "PackagePublish/2.0.0"
 		},
 
 		{
-			"@id": "http://localhost:65370/v3/registration3/",
+			"@id": "~/v3/registration3/",
 			"@type": "RegistrationsBaseUrl",
 			"comment": "Base URL of Azure storage where NuGet package registration info is stored"
 		},
 		{
-			"@id": "http://localhost:65370/v3/registration3-gz/",
+			"@id": "~/v3/registration3-gz/",
 			"@type": "RegistrationsBaseUrl/3.4.0",
 			"comment": "Base URL of Azure storage where NuGet package registration info is stored in GZIP format. This base URL does not include SemVer 2.0.0 packages."
 		},
 		{
-			"@id": "http://localhost:65370/v3/registration3-gz-semver2/",
+			"@id": "~/v3/registration3-gz-semver2/",
 			"@type": "RegistrationsBaseUrl/3.6.0",
 			"comment": "Base URL of Azure storage where NuGet package registration info is stored in GZIP format. This base URL includes SemVer 2.0.0 packages."
 		},
 
 		{
-			"@id": "http://localhost:65370/query",
+			"@id": "~/query",
 			"@type": "SearchQueryService",
 			"comment": "Query endpoint of NuGet Search service (primary)"
 		}

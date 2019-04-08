@@ -1,23 +1,35 @@
-﻿<div>	 
-	<div class="col-md-2"><input type="text" ng-model="$ctrl.Id" class="form-control" placeholder="Id"/></div>
-	<div class="col-md-2"><input type="text" ng-model="$ctrl.Version" class="form-control" placeholder="Version"/></div>
-	<div class="col-md-4"><input type="text" ng-model="$ctrl.Description" class="form-control" placeholder="Description"/></div>
-	<div class="col-md-1"><button ng-click="$ctrl.applyFilter()" class="btn btn-primary">Apply</button></div>
-				   
-	
-<div style="padding-top: 40px">
-	<table class="table table-bordered" style="font-size: small" >
-		<tr>
-			<th>Id</th>
-			<th>Version</th>			
-			<th>Description</th>
-		</tr>
+﻿<div>
+	<div style="padding-bottom:20px;padding-top:20px">
+		<i>To push nuget packages you can use command:</i> <b>nuget push package-name apiKey -Source {{$ctrl.pushAddress}}</b>
+	</div>
 
-		<tr ng-repeat="itr in $ctrl.data">
-			<td title="{{itr.Id}}" >{{itr.Id}}</td>
-			<td title="{{itr.Version}}" ng-click="$ctrl.open(itr.Id, itr.Version)"><a href="#">{{itr.Version}}</a></td>			
-			<td title="{{itr.Description}}">{{(itr.Description|limitTo:20) + (itr.Description.length > 20 ? '...': '')}}</td>
-		</tr>  
-	</table>	   
+	<div>
+		<button ng-click="$ctrl.openApiKeyGenerator()" class="btn btn-primary">Get or generate api key.</button>
+	</div>
+
+	<H3>Packages</H3>
+	<hr />
+	<div >
+		<div class="col-md-2" style="padding-left: 0px"><input type="text" ng-model="$ctrl.Id" class="form-control" placeholder="Id" /></div>
+		<div class="col-md-2"><input type="text" ng-model="$ctrl.Version" class="form-control" placeholder="Version" /></div>
+		<div class="col-md-6"><input type="text" ng-model="$ctrl.Description" class="form-control" placeholder="Description" /></div>
+		<div class="col-md-1"><button ng-click="$ctrl.applyFilter()" class="btn btn-primary">Apply filter</button></div>
+	</div>
+	
+	<div style="padding-top: 20px">
+		<hr />
+		<table class="table table-bordered" style="font-size: small">
+			<tr>
+				<th>Id</th>
+				<th>Version</th>
+				<th>Description</th>
+			</tr>
+
+			<tr ng-repeat="itr in $ctrl.data">
+				<td title="{{itr.Id}}">{{itr.Id}}</td>
+				<td title="{{itr.Version}}" ng-click="$ctrl.open(itr.Id, itr.Version)"><a href="#">{{itr.Version}}</a></td>
+				<td title="{{itr.Description}}">{{(itr.Description|limitTo:20) + (itr.Description.length > 20 ? '...': '')}}</td>
+			</tr>
+		</table>
 	</div>
 </div>

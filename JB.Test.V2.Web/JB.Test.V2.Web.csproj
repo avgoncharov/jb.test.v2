@@ -117,10 +117,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
+    <Content Include="app\components\api-key-info\api-key-info.component.js" />
+    <Content Include="app\components\api-key-info\api-key-info.template.html" />
     <Content Include="app\components\common-info\common-info.component.js" />
     <Content Include="app\components\common-info\common-info.template.html" />
     <Content Include="app\components\package-info\package-info.component.js" />
     <Content Include="app\components\package-info\package-info.template.html" />
+    <Content Include="app\services\nuget-user.service.js" />
     <Content Include="app\services\package.service.js" />
     <Content Include="App_Data\DB\PackagesDb.mdf" />
     <Content Include="App_Data\DB\PackagesDb_log.ldf">
