@@ -32,7 +32,7 @@ namespace JB.Test.V2.DAL.Implementation
 				if(filter == null || filter.IsEmpty())
 				{
 					return (await query
-						.Where(itr => itr.Latest && itr.VersionSuffix == "")
+						//.Where(itr => itr.Latest && itr.VersionSuffix == "")
 						.ToListAsync(token))
 						.Select(itr => itr.MapToPackage(_rootPath));
 
