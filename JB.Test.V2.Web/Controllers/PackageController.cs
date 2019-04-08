@@ -35,8 +35,12 @@ namespace JB.Test.V2.Web.Controllers
 		}
 
 
-		[Route("~/api/nuget/{id}/{version}/package.json")]
-		public async Task<IHttpActionResult> GetAsync(string id, string version, CancellationToken token)
+		[Route("~/api/nuget/{id}/{version}/{suffix}")]
+		public async Task<IHttpActionResult> GetAsync(
+			string id, 
+			string version, 
+			string suffix, 
+			CancellationToken token)
 		{
 			try
 			{
