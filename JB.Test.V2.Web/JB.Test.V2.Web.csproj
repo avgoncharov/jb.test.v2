@@ -145,6 +145,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ApiKeyGeneratorController.cs" />
     <Compile Include="Controllers\FlatcontainerController.cs" />
+    <Compile Include="Controllers\IndexController.cs" />
     <Compile Include="Controllers\NugetController.cs" />
     <Compile Include="Controllers\PackageController.cs" />
     <Compile Include="Controllers\ApiPackagesController.cs" />
@@ -161,7 +162,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="index.json" />
+    <Content Include="IndexTemplate.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="package.json" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">

@@ -102,33 +102,36 @@ namespace JB.Test.V2.DAL.Implementation
 		/// <inheritdoc/>
 		public async Task<IEnumerable<IPackage>> FindAllByFilterAsync(Filter filter, CancellationToken token)
 		{
-			var query = _store.Packages.AsQueryable();
-
-			if(filter == null || filter.IsEmpty())
+			using (var innerStore = new NugetStore()) //for thread safety and non - blocking
 			{
-				return (await query
-					.Where(itr => itr.Latest && itr.VersionSuffix == "")
-					.ToListAsync(token))
-					.Select(itr => itr.MapToPackage(_rootPath));
-					
-			}
+				var query = innerStore.Packages.AsQueryable();
 
-			if(string.IsNullOrWhiteSpace(filter.Id) != true)
-			{
-				query = query.Where(itr => itr.Id.Contains(filter.Id));
-			}
+				if (filter == null || filter.IsEmpty())
+				{
+					return (await query
+						.Where(itr => itr.Latest && itr.VersionSuffix == "")
+						.ToListAsync(token))
+						.Select(itr => itr.MapToPackage(_rootPath));
 
-			if(string.IsNullOrWhiteSpace(filter.Version) != true)
-			{
-				query = query.Where(itr => itr.Version.Contains(filter.Version));
-			}
+				}
 
-			if(string.IsNullOrWhiteSpace(filter.Description) != true)
-			{
-				query = query.Where(itr => itr.Description.Contains(filter.Description));
-			}
+				if (string.IsNullOrWhiteSpace(filter.Id) != true)
+				{
+					query = query.Where(itr => itr.Id.Contains(filter.Id));
+				}
 
-			return (await query.ToListAsync(token)).Select(itr => itr.MapToPackage(_rootPath));
+				if (string.IsNullOrWhiteSpace(filter.Version) != true)
+				{
+					query = query.Where(itr => itr.Version.Contains(filter.Version));
+				}
+
+				if (string.IsNullOrWhiteSpace(filter.Description) != true)
+				{
+					query = query.Where(itr => itr.Description.Contains(filter.Description));
+				}
+
+				return (await query.ToListAsync(token)).Select(itr => itr.MapToPackage(_rootPath));
+			}
 		}
 
 
@@ -140,15 +143,18 @@ namespace JB.Test.V2.DAL.Implementation
 				throw new ArgumentException("Id can't be null or empty.");
 			}
 
-			return (await _store.Packages.Where(itr =>
-				itr.Latest && itr.Id == id && itr.VersionSuffix == "").ToListAsync(token))
-				.Select(itr => itr.MapToPackage(_rootPath));
+			using (var innerStore = new NugetStore()) //for thread safety and non-blocking
+			{
+				return (await innerStore.Packages.Where(itr =>
+					itr.Latest && itr.Id == id && itr.VersionSuffix == "").ToListAsync(token))
+					.Select(itr => itr.MapToPackage(_rootPath));
+			}
 		}
 
 
 		/// <inheritdoc/>
 		public async Task<IPackage> GetPackageAsync(string id, string version, CancellationToken token)
-		{
+		{	
 			if(string.IsNullOrWhiteSpace(id))
 			{
 				throw new ArgumentException("Id can't be null or empty.");
@@ -158,12 +164,16 @@ namespace JB.Test.V2.DAL.Implementation
 			{
 				throw new ArgumentException("Version can't be null or empty.");
 			}
+						
+			using (var innerStore = new NugetStore()) // for thread safety and non-blocking
+			{
 
-			var buf = await _store.Packages.Where(itr =>
+				var buf = await innerStore.Packages.Where(itr =>
 					itr.Id == id && itr.Version == version).FirstOrDefaultAsync(token);
-				
 
-			return buf?.MapToPackage(_rootPath);
+
+				return buf?.MapToPackage(_rootPath);
+			}
 		}
 
 
@@ -173,7 +183,7 @@ namespace JB.Test.V2.DAL.Implementation
 			await SyncWithInputAsync(token);
 		}
 
-
+				
 		private async Task SyncWithFileSystemAsync(CancellationToken token)
 		{
 			var toDelete = new List<PackageDto>();
@@ -205,7 +215,7 @@ namespace JB.Test.V2.DAL.Implementation
 			}
 		}
 
-
+				
 		private async Task SyncWithInputAsync(CancellationToken token)
 		{
 			if(Directory.Exists(_inputRoot) != true)
@@ -230,6 +240,7 @@ namespace JB.Test.V2.DAL.Implementation
 		}
 
 
+		//Not thread safety.
 		private async Task<PackageDto> FindLatestAsync(string id, SemVersion version, CancellationToken token)
 		{
 			var release = string.IsNullOrWhiteSpace(version.VersionSuffix);
@@ -242,6 +253,7 @@ namespace JB.Test.V2.DAL.Implementation
 		}
 
 
+		//Not thread safety.
 		private async Task SaveToFileSystemAsync(IPackage package, CancellationToken token)
 		{
 			if(Directory.Exists(_rootPath) != true)

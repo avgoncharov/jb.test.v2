@@ -99,9 +99,12 @@ namespace JB.Test.V2.DAL.Implementation
 				throw new ArgumentException(nameof(apiKey));
 			}
 
-			var user = await _store.Users.FirstOrDefaultAsync(itr => itr.ApiKey == apiKey, token);
-			
-			return user != null? new NugetUser(user.ApiKey, user.Name) : null;
+			using (var innerStore = new NugetStore())
+			{
+				var user = await innerStore.Users.FirstOrDefaultAsync(itr => itr.ApiKey == apiKey, token);
+
+				return user != null ? new NugetUser(user.ApiKey, user.Name) : null;
+			}
 		}
 
 
@@ -113,9 +116,12 @@ namespace JB.Test.V2.DAL.Implementation
 				throw new ArgumentException(nameof(name));
 			}
 
-			var user = await _store.Users.FirstOrDefaultAsync(itr => itr.Name == name, token);
+			using (var innerStore = new NugetStore())
+			{
+				var user = await innerStore.Users.FirstOrDefaultAsync(itr => itr.Name == name, token);
 
-			return user != null ? new NugetUser(user.ApiKey, user.Name) : null;
+				return user != null ? new NugetUser(user.ApiKey, user.Name) : null;
+			}
 		}
 
 
