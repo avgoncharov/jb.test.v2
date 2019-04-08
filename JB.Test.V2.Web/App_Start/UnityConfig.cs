@@ -40,11 +40,20 @@ namespace JB.Test.V2.Web
 		/// </remarks>
 		public static void RegisterTypes(IUnityContainer container)
 		{
+			var output = CreatAbsolutePath(ConfigurationManager.AppSettings["OutputDir"]);
+
 			container.RegisterType<IPackagesFactory, PackagesFactory>();
-			container.RegisterSingleton<IPackagesRepository, PackagesRepository>(new InjectionConstructor(
-				CreatAbsolutePath(ConfigurationManager.AppSettings["OutputDir"]),
+
+			container.RegisterSingleton<IPackagesRepositoryWriter, PackagesRepositoryWriter>(new InjectionConstructor(
+				output,
 				CreatAbsolutePath(ConfigurationManager.AppSettings["InputDir"])));
-			container.RegisterSingleton<INugetUserRepository, NugetUserRepository>();
+
+			container.RegisterType<IPackagesRepositoryReader, PackagesRepositoryReader>(
+				new InjectionConstructor(output));
+
+			container.RegisterSingleton<INugetUserRepositoryWriter, NugetUserRepositoryWriter>();
+
+			container.RegisterType<INugetUserRepositoryReader, NugetUserRepositoryReader>();
 		}
 
 

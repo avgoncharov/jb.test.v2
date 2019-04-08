@@ -11,7 +11,8 @@ namespace JB.Test.V2.Web.Controllers
 	public class IndexController : ApiController
 	{
 		[Route(), HttpGet]
-		public IHttpActionResult Get() {
+		public IHttpActionResult Get()
+		{
 			var template = File.ReadAllText(System.Web.Hosting.HostingEnvironment.MapPath("~/bin/IndexTemplate.json"));
 
 			var stream = new MemoryStream(Encoding.UTF8.GetBytes(template.Replace("[host]", Url.Content("~/"))));

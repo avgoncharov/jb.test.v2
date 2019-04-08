@@ -18,19 +18,22 @@ namespace JB.Test.V2.Web.Controllers
 	public class PackageController : ApiController
 	{
 		private const string ApiKeyHeader = "X-NUGET-APIKEY";
-		private readonly INugetUserRepository _nugetUserRepository;
-		private readonly IPackagesRepository _packagesRepository;
+		private readonly INugetUserRepositoryReader _nugetUserRepositoryReader;
+		private readonly IPackagesRepositoryWriter _packagesRepositoryWriter;
+		private readonly IPackagesRepositoryReader _packagesRepositoryReader;
 		private readonly IPackagesFactory _pacakgeFactory;
 		private readonly ILogger _logger = Log.Logger.ForContext<PackageController>();
 
 
 		public PackageController(
-			INugetUserRepository nugetUserRepository,
-			IPackagesRepository packagesRepository,
+			INugetUserRepositoryReader nugetUserRepositoryReader,
+			IPackagesRepositoryWriter packagesRepositoryWriter,
+			IPackagesRepositoryReader packagesRepositoryReader,
 			IPackagesFactory pacakgeFactory)
 		{
-			_nugetUserRepository = nugetUserRepository ?? throw new ArgumentNullException(nameof(nugetUserRepository));
-			_packagesRepository = packagesRepository ?? throw new ArgumentNullException(nameof(packagesRepository));
+			_nugetUserRepositoryReader = nugetUserRepositoryReader ?? throw new ArgumentNullException(nameof(nugetUserRepositoryReader));
+			_packagesRepositoryWriter = packagesRepositoryWriter ?? throw new ArgumentNullException(nameof(packagesRepositoryWriter));
+			_packagesRepositoryReader = packagesRepositoryReader ?? throw new ArgumentNullException(nameof(packagesRepositoryReader));
 			_pacakgeFactory = pacakgeFactory ?? throw new ArgumentNullException(nameof(pacakgeFactory));
 		}
 
@@ -44,7 +47,7 @@ namespace JB.Test.V2.Web.Controllers
 		{
 			try
 			{
-				var result = await _packagesRepository.GetPackageAsync(id, version, token);
+				var result = await _packagesRepositoryReader.GetPackageAsync(id, version, token);
 				if (result == null)
 				{
 					return NotFound();
@@ -89,9 +92,8 @@ namespace JB.Test.V2.Web.Controllers
 			}
 
 			try
-			{
-
-				if(await _nugetUserRepository.FindUserByApiKeyAsync(apiKye, token) == null)
+			{			  
+				if(await _nugetUserRepositoryReader.FindUserByApiKeyAsync(apiKye, token) == null)
 				{
 					_logger.Warning($"User by api key '{apiKye}' wasn't found in system.");
 					return Unauthorized();
@@ -113,7 +115,7 @@ namespace JB.Test.V2.Web.Controllers
 
 
 				var package = await _pacakgeFactory.CreateFromFileAsync(temporaryFile, token);
-				await _packagesRepository.AddPackageAsync(package, token);
+				await _packagesRepositoryWriter.AddPackageAsync(package, token);
 
 				return Ok();
 			}

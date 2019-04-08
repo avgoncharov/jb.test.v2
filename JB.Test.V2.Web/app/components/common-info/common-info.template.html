@@ -28,7 +28,7 @@
 			<tr ng-repeat="itr in $ctrl.data">
 				<td title="{{itr.Id}}">{{itr.Id}}</td>
 				<td title="{{itr.Version}}" ng-click="$ctrl.open(itr.Id, itr.Version)"><a href="#">{{itr.Version}}</a></td>
-				<td title="{{itr.Description}}">{{(itr.Description|limitTo:20) + (itr.Description.length > 20 ? '...': '')}}</td>
+				<td title="{{itr.Description}}">{{(itr.Description|limitTo:150) + (itr.Description.length > 150 ? '...': '')}}</td>
 			</tr>
 		</table>
 	</div>

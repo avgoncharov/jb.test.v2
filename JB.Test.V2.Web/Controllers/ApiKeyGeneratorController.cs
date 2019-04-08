@@ -15,13 +15,17 @@ namespace JB.Test.V2.Web.Controllers
 	[RoutePrefix("api/api-key-generator")]
 	public class ApiKeyGeneratorController : ApiController
 	{
-		private readonly INugetUserRepository _nugetUserRepository;
+		private readonly INugetUserRepositoryWriter _nugetUserRepositoryWriter;
+		private readonly INugetUserRepositoryReader _nugetUserRepositoryReader;
 		private readonly ILogger _logger = Log.Logger.ForContext<ApiKeyGeneratorController>();
 
 
-		public ApiKeyGeneratorController(INugetUserRepository nugetUserRepository)
+		public ApiKeyGeneratorController(
+			INugetUserRepositoryWriter nugetUserRepository,
+			INugetUserRepositoryReader nugetUserRepositoryReader)
 		{
-			_nugetUserRepository = nugetUserRepository ?? throw new ArgumentNullException(nameof(nugetUserRepository));			
+			_nugetUserRepositoryWriter = nugetUserRepository ?? throw new ArgumentNullException(nameof(nugetUserRepository));
+			_nugetUserRepositoryReader = nugetUserRepositoryReader ?? throw new ArgumentNullException(nameof(nugetUserRepositoryReader));
 		}
 
 
@@ -33,7 +37,7 @@ namespace JB.Test.V2.Web.Controllers
 				return BadRequest("User name can't be empty.");
 			}
 
-			var user = await _nugetUserRepository.FindUserByNameAsync(userName, token);
+			var user = await _nugetUserRepositoryReader.FindUserByNameAsync(userName, token);
 			       
 			return user != null ? Ok(user) : NotFound() as IHttpActionResult;
 		}
@@ -47,7 +51,7 @@ namespace JB.Test.V2.Web.Controllers
 				return BadRequest("ApiKey can't be empty.");
 			}
 
-			var user = await _nugetUserRepository.FindUserByApiKeyAsync(apiKey, token);
+			var user = await _nugetUserRepositoryReader.FindUserByApiKeyAsync(apiKey, token);
 
 			return user != null ? Ok(user) : NotFound() as IHttpActionResult;
 		}
@@ -63,15 +67,16 @@ namespace JB.Test.V2.Web.Controllers
 
 			try
 			{
-				var user = await _nugetUserRepository.FindUserByNameAsync(userName, token);
+				var user = await _nugetUserRepositoryReader.FindUserByNameAsync(userName, token);
 				if (user != null)
 				{
 					return Ok(user.ApiKey);
 				}
 
 				var guid = Guid.NewGuid().ToString();
-				await _nugetUserRepository.CreateUserAsync(guid, userName, token);
-				var newUser = await _nugetUserRepository.FindUserByApiKeyAsync(guid, token);
+				await _nugetUserRepositoryWriter.CreateUserAsync(guid, userName, token);
+
+				var newUser = await _nugetUserRepositoryReader.FindUserByApiKeyAsync(guid, token);
 
 				return newUser != null ? Ok(newUser) : BadRequest() as IHttpActionResult;
 			}

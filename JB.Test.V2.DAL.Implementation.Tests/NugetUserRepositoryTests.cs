@@ -20,7 +20,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			var store = Container.Resolve<NugetStore>();
 			Assert.False(await store.Users.AnyAsync());
 
-			var repo = Container.Resolve<INugetUserRepository>();
+			var repo = Container.Resolve<INugetUserRepositoryWriter>();
 			await repo.CreateUserAsync(apiKey, name, CancellationToken.None);
 
 
@@ -34,7 +34,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			var store = Container.Resolve<NugetStore>();
 			Assert.False(await store.Users.AnyAsync());
 
-			var repo = Container.Resolve<INugetUserRepository>();
+			var repo = Container.Resolve<INugetUserRepositoryWriter>();
 			await repo.CreateUserAsync(apiKey, name, CancellationToken.None);
 			var exeption = await Assert.ThrowsAsync<UserIsAlreadyExistException>(async () => await repo.CreateUserAsync(apiKey, name, CancellationToken.None));			
 		}
@@ -46,7 +46,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			var store = Container.Resolve<NugetStore>();
 			Assert.False(await store.Users.AnyAsync());
 
-			var repo = Container.Resolve<INugetUserRepository>();
+			var repo = Container.Resolve<INugetUserRepositoryWriter>();
 			await repo.CreateUserAsync(apiKey, name, CancellationToken.None);
 			await repo.UpdateUserAsync(apiKey, newName, CancellationToken.None);
 			
@@ -58,7 +58,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 		[Theory, AutoData]
 		public async Task UpdateUserThatNotExistTest(string apiKey, string name)
 		{							
-			var repo = Container.Resolve<INugetUserRepository>();											      			
+			var repo = Container.Resolve<INugetUserRepositoryWriter>();											      			
 			var exception = await Assert.ThrowsAsync<UserNotFoundException>(async()=> await repo.UpdateUserAsync(apiKey, name, CancellationToken.None));			
 		}
 
@@ -69,7 +69,7 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			var store = Container.Resolve<NugetStore>();
 			Assert.False(await store.Users.AnyAsync());
 
-			var repo = Container.Resolve<INugetUserRepository>();
+			var repo = Container.Resolve<INugetUserRepositoryWriter>();
 			await repo.CreateUserAsync(apiKey, name, CancellationToken.None);
 
 			Assert.Single(store.Users);
@@ -85,15 +85,17 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			var store = Container.Resolve<NugetStore>();
 			Assert.False(await store.Users.AnyAsync());
 
-			var repo = Container.Resolve<INugetUserRepository>();
-			await repo.CreateUserAsync(apiKey, name, CancellationToken.None);	  
-			var user = await repo.FindUserByApiKeyAsync(apiKey, CancellationToken.None);
+			var repoWriter = Container.Resolve<INugetUserRepositoryWriter>();
+			await repoWriter.CreateUserAsync(apiKey, name, CancellationToken.None);
+
+			var repoReader = Container.Resolve<INugetUserRepositoryReader>();
+			var user = await repoReader.FindUserByApiKeyAsync(apiKey, CancellationToken.None);
 
 			Assert.NotNull(user);
 			Assert.Equal(name, user.Name);
 			Assert.Equal(apiKey, user.ApiKey);
 
-			var notFoundUserName = await repo.FindUserByApiKeyAsync(apiKey+name, CancellationToken.None);
+			var notFoundUserName = await repoReader.FindUserByApiKeyAsync(apiKey+name, CancellationToken.None);
 			Assert.Null(notFoundUserName);
 		}
 
@@ -104,15 +106,17 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 			var store = Container.Resolve<NugetStore>();
 			Assert.False(await store.Users.AnyAsync());
 
-			var repo = Container.Resolve<INugetUserRepository>();
-			await repo.CreateUserAsync(apiKey, name, CancellationToken.None);
-			var user = await repo.FindUserByNameAsync(name, CancellationToken.None);
+			var repoWriter = Container.Resolve<INugetUserRepositoryWriter>();
+			await repoWriter.CreateUserAsync(apiKey, name, CancellationToken.None);
+
+			var repoReader = Container.Resolve<INugetUserRepositoryReader>();
+			var user = await repoReader.FindUserByNameAsync(name, CancellationToken.None);
 
 			Assert.NotNull(user);
 			Assert.Equal(name, user.Name);
 			Assert.Equal(apiKey, user.ApiKey);
 
-			var notFoundUserName = await repo.FindUserByNameAsync(apiKey + name, CancellationToken.None);
+			var notFoundUserName = await repoReader.FindUserByNameAsync(apiKey + name, CancellationToken.None);
 			Assert.Null(notFoundUserName);
 		}
 
@@ -120,7 +124,8 @@ namespace JB.Test.V2.DAL.Implementation.Tests
 		protected override void ConfigureContainer()
 		{
 			base.ConfigureContainer();
-			Container.RegisterType<INugetUserRepository, NugetUserRepository>();
+			Container.RegisterType<INugetUserRepositoryWriter, NugetUserRepositoryWriter>();
+			Container.RegisterType<INugetUserRepositoryReader, NugetUserRepositoryReader>();
 		}
 
 

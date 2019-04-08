@@ -11,16 +11,16 @@ namespace JB.Test.V2.Web.Controllers
 	[RoutePrefix("api/packages")]
 	public class ApiPackagesController : ApiController
 	{
-		private readonly IPackagesRepository _packagesRepository;
+		private readonly IPackagesRepositoryReader _packagesRepositoryReader;
 		private readonly IPackagesFactory _pacakgeFactory;
 		private readonly ILogger _logger = Log.Logger.ForContext<ApiPackagesController>();
 
 
 		public ApiPackagesController(
-			IPackagesRepository packagesRepository,
+			IPackagesRepositoryReader packagesRepositoryReader,
 			IPackagesFactory pacakgeFactory)
 		{				
-			_packagesRepository = packagesRepository ?? throw new ArgumentNullException(nameof(packagesRepository));
+			_packagesRepositoryReader = packagesRepositoryReader ?? throw new ArgumentNullException(nameof(packagesRepositoryReader));
 			_pacakgeFactory = pacakgeFactory ?? throw new ArgumentNullException(nameof(pacakgeFactory));
 		}
 
@@ -30,7 +30,7 @@ namespace JB.Test.V2.Web.Controllers
 		{
 			try
 			{
-				var result = await _packagesRepository.FindAllByFilterAsync(filter, token);
+				var result = await _packagesRepositoryReader.FindAllByFilterAsync(filter, token);
 
 				if (result == null || result.Any() != true)
 				{
@@ -49,7 +49,7 @@ namespace JB.Test.V2.Web.Controllers
 		[Route("{id}/{version}"), HttpGet]
 		public async Task<IHttpActionResult> GetVersion(string id, string version, CancellationToken token)
 		{
-			var result = await _packagesRepository.FindAllByFilterAsync(new Filter { Id = id, Version = version }, token);
+			var result = await _packagesRepositoryReader.FindAllByFilterAsync(new Filter { Id = id, Version = version }, token);
 			if(result == null || result.Any() != true)
 			{
 				return NotFound();

@@ -13,12 +13,12 @@ namespace JB.Test.V2.Web.Controllers
 	[RoutePrefix("v3/registration3-gz")]
 	public class RegistrationGzController : ApiController
 	{
-		private readonly IPackagesRepository _packagesRepository;
+		private readonly IPackagesRepositoryReader _packagesRepositoryReader;
 		private readonly ILogger _logger = Log.Logger.ForContext<RegistrationGzController>();
 
-		public RegistrationGzController(IPackagesRepository packagesRepository)
+		public RegistrationGzController(IPackagesRepositoryReader packagesRepositoryReader)
 		{
-			_packagesRepository = packagesRepository ?? throw new ArgumentNullException(nameof(packagesRepository));
+			_packagesRepositoryReader = packagesRepositoryReader ?? throw new ArgumentNullException(nameof(packagesRepositoryReader));
 		}
 
 		[Route("{id}/index.json"), HttpGet]
@@ -26,7 +26,7 @@ namespace JB.Test.V2.Web.Controllers
 		{
 			try
 			{
-				var result = await _packagesRepository.FindAllByFilterAsync(new Filter { Id = id }, token);
+				var result = await _packagesRepositoryReader.FindAllByFilterAsync(new Filter { Id = id }, token);
 
 				if (result == null || result.Any() != true)
 				{

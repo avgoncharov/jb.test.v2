@@ -66,12 +66,14 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="NugetUser.cs" />
-    <Compile Include="NugetUserRepository.cs" />
+    <Compile Include="NugetUserRepositoryReader.cs" />
+    <Compile Include="NugetUserRepositoryWriter.cs" />
     <Compile Include="Package.cs" />
     <Compile Include="PackageDataExtractor.cs" />
     <Compile Include="PackageMetadata.cs" />
     <Compile Include="PackagesFactory.cs" />
-    <Compile Include="PackagesRepository.cs" />
+    <Compile Include="PackagesRepositoryWriter.cs" />
+    <Compile Include="PackagesRepositoryReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SemVersion.cs" />
     <Compile Include="SemVersionParser.cs" />

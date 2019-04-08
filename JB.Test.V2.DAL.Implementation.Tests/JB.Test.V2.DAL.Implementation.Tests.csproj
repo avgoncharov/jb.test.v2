@@ -109,11 +109,13 @@
   <ItemGroup>
     <Compile Include="NugetUserRepositoryTests.cs" />
     <Compile Include="PackagesFactoryTests.cs" />
-    <Compile Include="PackagesRepositoryTests.cs" />
+    <Compile Include="PackagesRepositoryReaderTests.cs" />
+    <Compile Include="PackagesRepositoryWriterTests.cs" />
     <Compile Include="PackagesStoreTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryTestsBase.cs" />
     <Compile Include="SemVersionParserTests.cs" />
+    <Compile Include="TestsConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JB.Test.V2.DAL.Implementation\JB.Test.V2.DAL.Implementation.csproj">
