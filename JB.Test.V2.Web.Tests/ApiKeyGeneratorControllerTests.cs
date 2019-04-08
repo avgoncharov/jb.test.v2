@@ -1,11 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using JB.Test.V2.DAL.Interfaces;
 using JB.Test.V2.Web.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity;
