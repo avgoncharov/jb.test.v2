@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JB.Test.V2.DAL.Implementati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JB.Test.V2.Web", "JB.Test.V2.Web\JB.Test.V2.Web.csproj", "{49DF14A9-183E-44F3-BF29-56520EE91565}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JB.Test.V2.Web.Tests", "JB.Test.V2.Web.Tests\JB.Test.V2.Web.Tests.csproj", "{9C1738FD-7321-4E0F-AB28-8A42DB9D24F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{49DF14A9-183E-44F3-BF29-56520EE91565}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49DF14A9-183E-44F3-BF29-56520EE91565}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49DF14A9-183E-44F3-BF29-56520EE91565}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C1738FD-7321-4E0F-AB28-8A42DB9D24F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C1738FD-7321-4E0F-AB28-8A42DB9D24F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C1738FD-7321-4E0F-AB28-8A42DB9D24F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C1738FD-7321-4E0F-AB28-8A42DB9D24F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

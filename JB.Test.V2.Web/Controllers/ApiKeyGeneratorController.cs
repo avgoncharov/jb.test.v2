@@ -70,7 +70,7 @@ namespace JB.Test.V2.Web.Controllers
 				var user = await _nugetUserRepositoryReader.FindUserByNameAsync(userName, token);
 				if (user != null)
 				{
-					return Ok(user.ApiKey);
+					return Ok(user);
 				}
 
 				var guid = Guid.NewGuid().ToString();
