@@ -22,7 +22,7 @@ namespace JB.Test.V2.Web.Controllers
 		}
 
 		[Route("{id}/index.json"), HttpGet]
-		public async Task<IHttpActionResult> Get(string id, CancellationToken token)
+		public async Task<IHttpActionResult> GetAsync(string id, CancellationToken token)
 		{
 			try
 			{
