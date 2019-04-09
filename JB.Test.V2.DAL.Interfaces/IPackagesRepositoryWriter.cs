@@ -9,7 +9,7 @@ namespace JB.Test.V2.DAL.Interfaces
 	public interface IPackagesRepositoryWriter
 	{
 		/// <summary>
-		/// Adds a package to the repository.
+		/// Adds the package to the repository.
 		/// </summary>
 		/// <param name="package">Package.</param>
 		/// <param name="token">Cancellation token.</param>
