@@ -30,9 +30,6 @@ namespace JB.Test.V2.Web.Controllers
 			resonse.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 			resonse.Content.Headers.ContentLength = stream.Length;
 			return ResponseMessage(resonse);
-
-			return Ok();
-
 		}
 	}
 }
