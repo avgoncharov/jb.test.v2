@@ -19,7 +19,7 @@ namespace JB.Test.V2.DAL.Interfaces
 
 
 		/// <summary>
-		/// Updates user's name by api key.
+		/// Updates user's name with api key.
 		/// </summary>
 		/// <param name="apiKey">User's api key.</param>
 		/// <param name="userName">New user's name.</param>
@@ -29,7 +29,7 @@ namespace JB.Test.V2.DAL.Interfaces
 
 
 		/// <summary>
-		/// Deletes user by api key.
+		/// Deletes user with api key.
 		/// </summary>
 		/// <param name="apiKey">User's api key.</param>
 		/// <param name="token">Cancellation token.</param>
