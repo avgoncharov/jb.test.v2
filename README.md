@@ -1,7 +1,7 @@
 # jb.test.v2
 The application is a truncated version of the Nuget feed with web interface.  
-The “nuget push” and “nuge install” commands are supported.  
-It runs over Nuget API v3 protocol.
+The “nuget push” and “nuge install” commands are supported.    
+It runs over Nuget API v3 protocol.  
 The application allows to review data of uploaded packages and execute search with id, version and description through the web interface.    
 
 Repository synchronization with file system runs over at the application startup, restart:   
