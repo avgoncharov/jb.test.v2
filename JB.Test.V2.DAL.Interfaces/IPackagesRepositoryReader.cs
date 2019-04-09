@@ -20,7 +20,7 @@ namespace JB.Test.V2.DAL.Interfaces
 
 
 		/// <summary>
-		/// Gets package by id and version.
+		/// Gets a package by id and version.
 		/// </summary>
 		/// <param name="id">Id of the package.</param>
 		/// <param name="version">Version of the package.</param>
