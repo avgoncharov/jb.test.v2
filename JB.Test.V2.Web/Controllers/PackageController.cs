@@ -83,7 +83,7 @@ namespace JB.Test.V2.Web.Controllers
 
 
 		[Route(""), HttpPut]
-		public async Task<IHttpActionResult> Put(CancellationToken token)
+		public async Task<IHttpActionResult> PutAsync(CancellationToken token)
 		{
 			var apiKye = GetApiKey();
 			if(string.IsNullOrWhiteSpace(apiKye))
