@@ -4,7 +4,7 @@ The “nuget push” and “nuge install” commands are supported.
 Works by using nuget api v3 protocol.  
 Allows to review data of uploaded packages and execute search with id, version and description through the web interface.    
 
-During the startup and restart process, synchronization between the storage and the file system is performed:    
+Repository synchronization with file system runs over at the application startup, restart:   
 * All packages from input folder (for now it's ~/Pkgs/Input) are saved in system and deleted from input folder  
 * Packages that were registered in system but deleted from output folder (for now it's ~/Pkgs/Output) are delete from the system  
 
