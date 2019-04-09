@@ -16,12 +16,16 @@
 		ctrl.Id = "";
 		ctrl.Version = "";
 		ctrl.Description = "";
+		ctrl.loaded = false;
+		ctrl.error = "";
 			 
 		ctrl.$onInit = function () {
 			ctrl.applyFilter();
 		};
 
 		ctrl.applyFilter = function () {
+			ctrl.loaded = false;
+			ctrl.error = "";
 			packageService.findByFilter(
 				ctrl.Id,				
 				ctrl.Version,
@@ -31,13 +35,16 @@
 		};
 
 		ctrl.successHandler = function (result) {
-			ctrl.data = result.data ? result.data: result;
+			ctrl.data = result.data ? result.data : result;
+			ctrl.loaded = true;
 		};
 
 		ctrl.errorHandler = function(error) {
 			ctrl.data = [];
 			alert("Can't get history: " + error.data.Message);
 			console.log(error);
+			ctrl.loaded = true;
+			ctrl.error = "Some errors occurred...";
 		};
 
 		ctrl.open = function(id, version) {

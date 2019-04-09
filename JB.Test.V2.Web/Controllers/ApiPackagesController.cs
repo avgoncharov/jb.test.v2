@@ -33,7 +33,7 @@ namespace JB.Test.V2.Web.Controllers
 					return NotFound();
 				}
 
-				return Ok(result);
+				return Ok(result.OrderBy(itr=>itr.Id));
 			}
 			catch (Exception ex) {
 				_logger.Error(ex.ToString());
