@@ -1,7 +1,7 @@
 ﻿namespace JB.Test.V2.DAL.Interfaces
 {
 	/// <summary>
-	/// Class of a filter for package searching.
+	/// The class of a filter for package searching.
 	/// </summary>
 	public sealed class Filter
 	{
