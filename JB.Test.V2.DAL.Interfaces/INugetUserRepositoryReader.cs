@@ -9,7 +9,7 @@ namespace JB.Test.V2.DAL.Interfaces
 	public interface INugetUserRepositoryReader
 	{
 		/// <summary>
-		/// Looking for user by apiKey.
+		/// Lookings for user by apiKey.
 		/// </summary>
 		/// <param name="apiKey">ApiKey of user.</param>
 		/// <param name="token">Cancellation token.</param>
@@ -18,7 +18,7 @@ namespace JB.Test.V2.DAL.Interfaces
 
 
 		/// <summary>
-		/// Looking for user by user's name.
+		/// Lookings for user by user's name.
 		/// </summary>
 		/// <param name="name">User's name.</param>
 		/// <param name="token">Cancellation token.</param>
