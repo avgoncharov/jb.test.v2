@@ -9,4 +9,4 @@ Repository synchronization with file system runs over at the application startup
 * Packages that were registered in the system but deleted from output folder (so far it's ~/Pkgs/Output) are deleted from the system  
 
 ##### Deploying and configuration
-At deploying to IIS it is necessary to specify connection string to MSSQL database in which packages information will be saved.  
+At deploying to IIS it is necessary to specify connection string to MSSQL database in which packages information will be saved to.  
