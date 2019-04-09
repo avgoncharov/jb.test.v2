@@ -20,9 +20,6 @@ namespace JB.Test.V2.Web
 			GlobalConfiguration.Configure(WebApiConfig.Register);
 
 			SyncWithFileSystem();
-
-			//TODO: Sync repo on start.
-			//TODO: from right index.json.
 		}
 
 		private void SyncWithFileSystem()
