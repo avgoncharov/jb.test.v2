@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace JB.Test.V2.DAL.Interfaces
 {
 	/// <summary>
-	/// Interface of a package.
+	/// The interface of a package.
 	/// </summary>
 	public interface IPackage
 	{
