@@ -1,5 +1,5 @@
 # jb.test.v2
-This is a truncated version of the Nuget feed.  
+This is a truncated version of the Nuget feed with web interface.  
 The “nuget push” and “nuge install” commands are supported.  
 Works by using nuget api v3 protocol.  
 Provides viewing data of pushed packages and searching by id, version and description through web interface.    
