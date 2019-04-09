@@ -18,7 +18,7 @@ namespace JB.Test.V2.DAL.Interfaces
 			       
 
 		/// <summary>
-		/// Synchronizes repository with file system.
+		/// Synchronizes the repository with file system.
 		/// </summary>
 		/// <param name="token">Cancellation token.</param>
 		/// <returns></returns>
