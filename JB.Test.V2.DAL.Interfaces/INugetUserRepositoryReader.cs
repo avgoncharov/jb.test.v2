@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace JB.Test.V2.DAL.Interfaces
 {
 	/// <summary>
-	/// The interface of nuget users repository, read only.
+	/// The interface of repository of nuget users, read only.
 	/// </summary>
 	public interface INugetUserRepositoryReader
 	{
