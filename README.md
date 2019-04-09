@@ -7,3 +7,6 @@ Provides viewing data of pushed packages and searching by id, version and descri
 During the startup and restart process, synchronization between the storage and the file system is performed:  
 * All packages from input folder (for now it's ~/Pkgs/Input) will saved in system and remove from input folder  
 * Packages for which there are no images in the output folder (for now it's ~/Pkgs/Output)  will be removed from the system  
+
+### Deploying and configuration
+When deploying to iis, you must change the connection string to the actual mssql server and database.
